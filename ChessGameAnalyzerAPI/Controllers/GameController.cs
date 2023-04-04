@@ -38,9 +38,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
             
             
             
-            
-            
-            
             // return new List<Game>
             // {
             //     new Game
