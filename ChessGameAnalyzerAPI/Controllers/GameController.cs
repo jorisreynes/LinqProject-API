@@ -113,7 +113,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             {
                 if (game.Result == "1-0" && game.White == pseudo)
                 {
-                    gamesResult.numberOgGamesWonWithWhite++;
+                    gamesResult.numberOfGamesWonWithWhite++;
                 }
                 else if (game.Result == "1/2-1/2" && game.White == pseudo)
                 {
