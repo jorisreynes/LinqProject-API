@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -21,11 +22,15 @@ namespace ChessGame_AnalyzerAPI.Controllers
             pseudo = "BleepBleepBlop";
 
             // Chemin du fichier exporté de Chess.com
-            string filePath = $@"../DataSource/Text/data.txt";
+            string filePathTxt = $@"../DataSource/Text/data.txt";
+            
+            // A faire: mettre les chemins dans des variables
+            string filePathXML = $@"../DataSource/XML/data.txt";
+
 
             // On créé une liste avec les parties du fichier texte de chesscom
             List<ChessGame> games = new List<ChessGame>();
-            using (StreamReader reader = new StreamReader(filePath))
+            using (StreamReader reader = new StreamReader(filePathTxt))
             {
                 string line;
                 ChessGame currentGame = null;
@@ -94,11 +99,17 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 }
             }
             
+           // on appelle la fonction printxml pour enregistrer la collection games en XML
+            printXML(games);
+            
+            // on appelle la fonction printjson pour enregistrer la collection games en JSON
+            printJSON(games);
+            
             //on créé une nouvelle instance de GamesResult
             GamesResult gamesResult = new GamesResult();
             
             // On compte les parties gagnees perdues ou nulles
-            foreach (var game in games)
+            foreach (ChessGame game in games)
             {
                 if (game.Result == "1-0" && game.White == pseudo)
                 {
@@ -126,6 +137,37 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 }
             }
             return gamesResult;
+        }
+        
+        // Fonction pour enregistrer la collection games en XML
+        static void printXML(List<ChessGame> games)
+        {
+            var XML = new XElement("ChessGame",
+                from game in games
+                select new XElement("Game",
+                    new XElement("Event", game.Event),
+                    new XElement("Site", game.Site),
+                    new XElement("Date", game.Date),
+                    new XElement("Round", game.Round),
+                    new XElement("White", game.White),
+                    new XElement("Black", game.Black),
+                    new XElement("Result", game.Result),
+                    new XElement("WhiteElo", game.WhiteElo),
+                    new XElement("BlackElo", game.BlackElo),
+                    new XElement("TimeControl", game.TimeControl),
+                    new XElement("EndTime", game.EndTime),
+                    new XElement("Termination", game.Termination),
+                    new XElement("Moves", game.Moves)
+                    )
+                );
+            System.IO.File.WriteAllText(@"../DataSource/XML/data.xml", XML.ToString());
+        }
+        
+        // Fonction pour enregistrer la collection games en JSON
+        static void printJSON(List<ChessGame> games)
+        {
+            string json = JsonSerializer.Serialize(games);
+            System.IO.File.WriteAllText(@"../DataSource/JSON/data.json", json);
         }
     }
 }

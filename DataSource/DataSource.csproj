@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="JSON" />
+      <Folder Include="XML" />
+    </ItemGroup>
+
 </Project>
