@@ -18,17 +18,34 @@ namespace ChessGame_AnalyzerAPI.Controllers
         [HttpGet]
         public GamesResult GetGames()
         {
-            // A Faire: créer une fonction qui trouve elle meme le pseudo en fonction de ce qui revient le plus souvent 
+            // To do: create a function to find automatically the nickname of the player
             pseudo = "BleepBleepBlop";
 
-            // Chemin du fichier exporté de Chess.com
+            // Path of file Chess.com
             string filePathTxt = $@"../DataSource/Text/data.txt";
             
-            // A faire: mettre les chemins dans des variables
+            // To Do : Use variables to store the path of the files
             string filePathXML = $@"../DataSource/XML/data.txt";
+            string filePathJSON = $@"../DataSource/JSON/data.txt";
+
+            string opening = "ecossaise";
+            string firstMoves = "";
+
+            switch (opening)
+            {
+                case "ecossaise":
+                    firstMoves = "1. e4 e5 2. Nf3 Nc6 3. d4";
+                    break;
+                case "espagnole":
+                    firstMoves = "1. e4 e5 2. Nf3 Nc6 3. Bb5";
+                    break;
+                case "italienne":
+                    firstMoves = "1. e4 e5 2. Nf3 Nc6 3. Bc4";
+                    break;
+            }
 
 
-            // On créé une liste avec les parties du fichier texte de chesscom
+            // We create a list avec all the games in the file from Chess.com
             List<ChessGame> games = new List<ChessGame>();
             using (StreamReader reader = new StreamReader(filePathTxt))
             {
@@ -36,14 +53,14 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 ChessGame currentGame = null;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    // Si la ligne commence par event on créé un nouvel objet
+                    // If the line starts with Event we create a new object ChessGame
                     if (line.StartsWith("[Event "))
                     {
                         currentGame = new ChessGame();
                         games.Add(currentGame);
                     }
 
-                    // on alimente les propriétés de l'objet
+                    // We store the data in the object
                     if (line.StartsWith("["))
                     {
                         string key = line.Substring(1, line.IndexOf(' ') - 1);
@@ -94,22 +111,27 @@ namespace ChessGame_AnalyzerAPI.Controllers
                     }
                     else if (!string.IsNullOrWhiteSpace(line))
                     {
-                        currentGame.Moves = line.Split(' ').ToList();
+                        currentGame.Moves += line + " ";
                     }
                 }
             }
+
+            // We create a list with all the games that contains the opening using LINQ
+            List<ChessGame> filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
             
-           // on appelle la fonction printxml pour enregistrer la collection games en XML
+
+
+            // We save the games in a new XML file
             printXML(games);
             
-            // on appelle la fonction printjson pour enregistrer la collection games en JSON
+            // We save the games in a new JSON file
             printJSON(games);
             
-            //on créé une nouvelle instance de GamesResult
+            // We create a new GamesResult
             GamesResult gamesResult = new GamesResult();
             
-            // On compte les parties gagnees perdues ou nulles
-            foreach (ChessGame game in games)
+            // We score the games
+            foreach (ChessGame game in filteredGames)
             {
                 if (game.Result == "1-0" && game.White == pseudo)
                 {
@@ -139,7 +161,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             return gamesResult;
         }
         
-        // Fonction pour enregistrer la collection games en XML
+        // Save the collection games in XML
         static void printXML(List<ChessGame> games)
         {
             var XML = new XElement("ChessGame",
@@ -163,7 +185,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             System.IO.File.WriteAllText(@"../DataSource/XML/data.xml", XML.ToString());
         }
         
-        // Fonction pour enregistrer la collection games en JSON
+        // Function to save the collection games in JSON
         static void printJSON(List<ChessGame> games)
         {
             string json = JsonSerializer.Serialize(games);

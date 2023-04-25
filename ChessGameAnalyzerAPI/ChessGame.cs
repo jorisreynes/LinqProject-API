@@ -15,7 +15,8 @@ namespace ChessGame_AnalyzerAPI
 		public string TimeControl { get; set; }
 		public string EndTime { get; set; }
 		public string Termination { get; set; }
-		public List<string> Moves { get; set; }
+		public string Moves { get; set; }
+
 	}
 }
 
