@@ -21,7 +21,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
         static string filePathJSON = $@"../../DataSource/JSON/data.json";
         
         [HttpGet]
-        public GamesResult GetGames(string opening)
+        public GamesResult GetGames(string opening = "All openings")
         {
             string firstMoves = "";
             switch (opening)
@@ -58,6 +58,9 @@ namespace ChessGame_AnalyzerAPI.Controllers
                     break;
                 case "d4":
                     firstMoves = "1. d4";
+                    break;
+                case "All openings":
+                    firstMoves = "1.";
                     break;
             }
             
@@ -131,6 +134,8 @@ namespace ChessGame_AnalyzerAPI.Controllers
                     }
                 }
             }
+            
+            Console.WriteLine("Number of games: " + games.Count);
 
             // function to find the pseudo of the player we have the most in white and black
             List<string> pseudoList = new List<string>();
@@ -145,6 +150,8 @@ namespace ChessGame_AnalyzerAPI.Controllers
 
             // We create a list with all the games that contains the opening using LINQ
             List<ChessGame> filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
+            
+            Console.WriteLine("Number of games with the opening: " + filteredGames.Count);
             
             // We save the games in a new XML file
             printXML(games);
@@ -162,11 +169,19 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 {
                     gamesResult.numberOfGamesWon++;
                 }
+                else if (game.Result == "1-0" && game.Black == pseudo)
+                {
+                    gamesResult.numberOfGamesLost++;
+                }
                 else if (game.Result == "1/2-1/2")
                 {
                     gamesResult.numberOfGamesDrawn++;
                 }
                 else if (game.Result == "0-1" && game.Black == pseudo)
+                {
+                    gamesResult.numberOfGamesWon++;
+                }
+                else if (game.Result == "0-1" && game.White == pseudo)
                 {
                     gamesResult.numberOfGamesLost++;
                 }
