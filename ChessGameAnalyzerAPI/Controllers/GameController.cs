@@ -15,18 +15,15 @@ namespace ChessGame_AnalyzerAPI.Controllers
     {
         public string pseudo { get; set; }
         
+        // Files paths
+        string filePathTxt = $@"../../DataSource/Text/data.txt";
+        static string filePathXML = $@"../../DataSource/XML/data.xml";
+        static string filePathJSON = $@"../../DataSource/JSON/data.json";
+        
         [HttpGet]
         public GamesResult GetGames(string opening)
         {
-            // Path of file Chess.com
-            string filePathTxt = $@"../../DataSource/Text/data.txt";
-            
-            // To Do : Use variables to store the path of the files
-            //string filePathXML = $@"../DataSource/XML/data.txt";
-            //string filePathJSON = $@"../DataSource/JSON/data.txt";
-
             string firstMoves = "";
-
             switch (opening)
             {
                 case "Scotch":
@@ -202,14 +199,14 @@ namespace ChessGame_AnalyzerAPI.Controllers
                     new XElement("Moves", game.Moves)
                     )
                 );
-            System.IO.File.WriteAllText(@"../../DataSource/XML/data.xml", XML.ToString());
+            System.IO.File.WriteAllText(filePathXML, XML.ToString());
         }
         
         // Function to save the collection games in JSON
         static void printJSON(List<ChessGame> games)
         {
             string json = JsonSerializer.Serialize(games);
-            System.IO.File.WriteAllText(@"../../DataSource/JSON/data.json", json);
+            System.IO.File.WriteAllText(filePathJSON, json);
         }
     }
 }
