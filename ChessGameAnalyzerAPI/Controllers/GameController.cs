@@ -157,27 +157,15 @@ namespace ChessGame_AnalyzerAPI.Controllers
             {
                 if (game.Result == "1-0" && game.White == pseudo)
                 {
-                    gamesResult.numberOfGamesWonWithWhite++;
+                    gamesResult.numberOfGamesWon++;
                 }
-                else if (game.Result == "1/2-1/2" && game.White == pseudo)
+                else if (game.Result == "1/2-1/2")
                 {
-                    gamesResult.numberOfGamesDrawnWithWhite++;
-                }
-                else if (game.Result == "0-1" && game.White == pseudo)
-                {
-                    gamesResult.numberOfGamesLostWithWhite++;
-                }
-                else if (game.Result == "1-0" && game.Black == pseudo)
-                {
-                    gamesResult.numberOfGamesWonWithBlack++;
-                }
-                else if (game.Result == "1/2-1/2" && game.Black == pseudo)
-                {
-                    gamesResult.numberOfGamesDrawnWithBlack++;
+                    gamesResult.numberOfGamesDrawn++;
                 }
                 else if (game.Result == "0-1" && game.Black == pseudo)
                 {
-                    gamesResult.numberOfGamesLostWithBlack++;
+                    gamesResult.numberOfGamesLost++;
                 }
             }
             return gamesResult;
