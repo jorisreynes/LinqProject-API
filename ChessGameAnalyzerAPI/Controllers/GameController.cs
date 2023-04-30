@@ -18,9 +18,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
         [HttpGet]
         public GamesResult GetGames(string opening)
         {
-            // To do: create a function to find automatically the nickname of the player
-            pseudo = "BleepBleepBlop";
-
             // Path of file Chess.com
             string filePathTxt = $@"../../DataSource/Text/data.txt";
             
@@ -138,11 +135,20 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 }
             }
 
+            // function to find the pseudo of the player we have the most in white and black
+            List<string> pseudoList = new List<string>();
+            foreach (ChessGame game in games)
+            {
+                pseudoList.Add(game.White);
+                pseudoList.Add(game.Black);
+            }
+            // we find the pseudo that appears the most
+            pseudo = pseudoList.GroupBy(i => i).OrderByDescending(grp => grp.Count())
+                .Select(grp => grp.Key).First();
+
             // We create a list with all the games that contains the opening using LINQ
             List<ChessGame> filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
             
-
-
             // We save the games in a new XML file
             printXML(games);
             
