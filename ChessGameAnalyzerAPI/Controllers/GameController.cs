@@ -32,34 +32,31 @@ namespace ChessGame_AnalyzerAPI.Controllers
 
             switch (opening)
             {
-                case "Ecossaise":
+                case "Scotch":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6 3. d4";
                     break;
-                case "Espagnole":
+                case "Spanish":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6 3. Bb5";
                     break;
-                case "Italienne":
+                case "Italian":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6 3. Bc4";
                     break;
                 case "Alekhine":
                     firstMoves = "1. e4 Cf6";
                     break;
-                case "Sicilienne":
+                case "Sicilian":
                     firstMoves = "1. e4 c5";
                     break;
                 case "Caro-kann":
                     firstMoves = "1. e4 c6";
                     break;
-                case "Queens-gambit":
-                    firstMoves = "1. d4 d5 2. c4";
-                    break;
-                case "Slave":
+                case "Slav":
                     firstMoves = "1. d4 d5 2. c4 c6";
                     break;
                 case"Petrov":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6";
                     break;
-                case "Scandinave":
+                case "Scandinavian":
                     firstMoves = "1. e4 d5";
                     break;
                 case "e4":
