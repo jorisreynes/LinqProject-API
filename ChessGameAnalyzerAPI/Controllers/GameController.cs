@@ -16,7 +16,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
         public string pseudo { get; set; }
         
         [HttpGet]
-        public GamesResult GetGames(string opening)
+        public GamesResult GetGames(string opening, string color="All games")
         {
             // To do: create a function to find automatically the nickname of the player
             pseudo = "BleepBleepBlop";
@@ -32,34 +32,31 @@ namespace ChessGame_AnalyzerAPI.Controllers
 
             switch (opening)
             {
-                case "Ecossaise":
+                case "Scotch":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6 3. d4";
                     break;
-                case "Espagnole":
+                case "Spanish":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6 3. Bb5";
                     break;
-                case "Italienne":
+                case "Italian":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6 3. Bc4";
                     break;
                 case "Alekhine":
                     firstMoves = "1. e4 Cf6";
                     break;
-                case "Sicilienne":
+                case "Sicilian":
                     firstMoves = "1. e4 c5";
                     break;
                 case "Caro-kann":
                     firstMoves = "1. e4 c6";
                     break;
-                case "Queens-gambit":
-                    firstMoves = "1. d4 d5 2. c4";
-                    break;
-                case "Slave":
+                case "Slav":
                     firstMoves = "1. d4 d5 2. c4 c6";
                     break;
                 case"Petrov":
                     firstMoves = "1. e4 e5 2. Nf3 Nc6";
                     break;
-                case "Scandinave":
+                case "Scandinavian":
                     firstMoves = "1. e4 d5";
                     break;
                 case "e4":
@@ -68,9 +65,12 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 case "d4":
                     firstMoves = "1. d4";
                     break;
+                case "All openings":
+                    firstMoves = "1.";
+                    break;
             }
             
-            // We create a list avec all the games in the file from Chess.com
+            // We create a list with all the games in the file from Chess.com
             List<ChessGame> games = new List<ChessGame>();
             using (StreamReader reader = new StreamReader(filePathTxt))
             {
@@ -141,10 +141,22 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 }
             }
 
-            // We create a list with all the games that contains the opening using LINQ
-            List<ChessGame> filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
             
-
+            // We create a list with all the games that contains the opening, and where pseudo plays with the selected color, using LINQ
+            List<ChessGame> filteredGames = new List<ChessGame>();
+            if (color == "All games")
+            {
+                filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
+            }
+            else if (color == "White")
+            {
+                filteredGames = games.Where(g => g.Moves.Contains(firstMoves) && g.White == pseudo).ToList();
+            }
+            else if (color == "Black")
+            {
+                filteredGames = games.Where(g => g.Moves.Contains(firstMoves) && g.Black == pseudo).ToList();
+            }
+           
 
             // We save the games in a new XML file
             printXML(games);
