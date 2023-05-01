@@ -15,7 +15,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
     {
         private string pseudo { get; set; }
         
-        // Files paths
+        // Files paths 
         private const string FilePathTxt = $@"../../DataSource/Text/data.txt";
         private const string FilePathXml = $@"../../DataSource/XML/data.xml";
         private const string FilePathJson = $@"../../DataSource/JSON/data.json";
