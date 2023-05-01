@@ -13,13 +13,13 @@ namespace ChessGame_AnalyzerAPI.Controllers
     [ApiController]
     public class GameController : Controller
     {
-        public string pseudo { get; set; }
+        private string pseudo { get; set; }
         
         // Files paths
-        string filePathTxt = $@"../../DataSource/Text/data.txt";
-        static string filePathXML = $@"../../DataSource/XML/data.xml";
-        static string filePathJSON = $@"../../DataSource/JSON/data.json";
-        
+        private const string FilePathTxt = $@"../../DataSource/Text/data.txt";
+        private const string FilePathXml = $@"../../DataSource/XML/data.xml";
+        private const string FilePathJson = $@"../../DataSource/JSON/data.json";
+
         [HttpGet]
         public GamesResult GetGames(string opening = "All openings")
         {
@@ -66,7 +66,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             
             // We create a list avec all the games in the file from Chess.com
             List<ChessGame> games = new List<ChessGame>();
-            using (StreamReader reader = new StreamReader(filePathTxt))
+            using (StreamReader reader = new StreamReader(FilePathTxt))
             {
                 string line;
                 ChessGame currentGame = null;
@@ -154,10 +154,10 @@ namespace ChessGame_AnalyzerAPI.Controllers
             Console.WriteLine("Number of games with the opening: " + filteredGames.Count);
             
             // We save the games in a new XML file
-            printXML(games);
+            PrintXml(games);
             
             // We save the games in a new JSON file
-            printJSON(games);
+            PrintJson(games);
             
             // We create a new GamesResult
             GamesResult gamesResult = new GamesResult();
@@ -194,9 +194,9 @@ namespace ChessGame_AnalyzerAPI.Controllers
        
         
         // Save the collection games in XML
-        static void printXML(List<ChessGame> games)
+        private static void PrintXml(IEnumerable<ChessGame> games)
         {
-            var XML = new XElement("ChessGame",
+            XElement xml = new XElement("ChessGame",
                 from game in games
                 select new XElement("Game",
                     new XElement("Event", game.Event),
@@ -214,14 +214,14 @@ namespace ChessGame_AnalyzerAPI.Controllers
                     new XElement("Moves", game.Moves)
                     )
                 );
-            System.IO.File.WriteAllText(filePathXML, XML.ToString());
+            System.IO.File.WriteAllText(FilePathXml, xml.ToString());
         }
         
         // Function to save the collection games in JSON
-        static void printJSON(List<ChessGame> games)
+        private static void PrintJson(List<ChessGame> games)
         {
             string json = JsonSerializer.Serialize(games);
-            System.IO.File.WriteAllText(filePathJSON, json);
+            System.IO.File.WriteAllText(FilePathJson, json);
         }
     }
 }
