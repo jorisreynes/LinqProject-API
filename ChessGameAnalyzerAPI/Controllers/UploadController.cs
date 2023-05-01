@@ -15,6 +15,15 @@ public class UploadController : Controller
     [Route("api/upload")]
     public void UploadFile(IFormFile file)
     {
+        // delete the file if it already exists
+        if (System.IO.File.Exists(Path.Combine(
+            Directory.GetCurrentDirectory(), "../../DataSource/Text",
+            file.FileName)))
+        {
+            System.IO.File.Delete(Path.Combine(
+                Directory.GetCurrentDirectory(), "../../DataSource/Text",
+                file.FileName));
+        }
         
         string path = Path.Combine(
             Directory.GetCurrentDirectory(), "../../DataSource/Text",

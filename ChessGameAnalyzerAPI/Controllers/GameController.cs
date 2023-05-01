@@ -17,8 +17,8 @@ namespace ChessGame_AnalyzerAPI.Controllers
         
         // Files paths 
         private const string FilePathTxt = $@"../../DataSource/Text/data.txt";
-        private const string FilePathXml = $@"../../DataSource/XML/data.xml";
-        private const string FilePathJson = $@"../../DataSource/JSON/data.json";
+        private const string FilePathXml = $@"../../ChessGameAnalyzer.UI/src/assets/data.xml";
+        private const string FilePathJson = $@"../../ChessGameAnalyzer.UI/src/assets/data.json";
 
         [HttpGet]
         public GamesResult GetGames(string opening = "All openings")
@@ -216,6 +216,13 @@ namespace ChessGame_AnalyzerAPI.Controllers
         // Function to save the collection games in JSON
         private static void PrintJson(List<ChessGame> games)
         {
+            Console.WriteLine("Saving games in JSON...");
+            // delete the old file if it exists
+            if (System.IO.File.Exists(FilePathJson))
+            {
+                Console.WriteLine("Deleting old JSON file...");
+                System.IO.File.Delete(FilePathJson);
+            }
             string json = JsonSerializer.Serialize(games);
             System.IO.File.WriteAllText(FilePathJson, json);
         }
