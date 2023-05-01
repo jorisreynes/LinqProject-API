@@ -15,13 +15,12 @@ public class UploadController : Controller
     [Route("api/upload")]
     public void UploadFile(IFormFile file)
     {
-            
-
-        var path = Path.Combine(
+        
+        string path = Path.Combine(
             Directory.GetCurrentDirectory(), "../../DataSource/Text",
             file.FileName);
 
-        using (var stream = new FileStream(path, FileMode.Create))
+        using (FileStream stream = new FileStream(path, FileMode.Create))
         {
             file.CopyToAsync(stream);
         }

@@ -135,8 +135,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 }
             }
             
-            Console.WriteLine("Number of games: " + games.Count);
-
             // function to find the pseudo of the player we have the most in white and black
             List<string> pseudoList = new List<string>();
             foreach (ChessGame game in games)
@@ -150,8 +148,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
 
             // We create a list with all the games that contains the opening using LINQ
             List<ChessGame> filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
-            
-            Console.WriteLine("Number of games with the opening: " + filteredGames.Count);
             
             // We save the games in a new XML file
             PrintXml(games);
@@ -167,23 +163,23 @@ namespace ChessGame_AnalyzerAPI.Controllers
             {
                 if (game.Result == "1-0" && game.White == pseudo)
                 {
-                    gamesResult.numberOfGamesWon++;
+                    gamesResult.NumberOfGamesWon++;
                 }
                 else if (game.Result == "1-0" && game.Black == pseudo)
                 {
-                    gamesResult.numberOfGamesLost++;
+                    gamesResult.NumberOfGamesLost++;
                 }
                 else if (game.Result == "1/2-1/2")
                 {
-                    gamesResult.numberOfGamesDrawn++;
+                    gamesResult.NumberOfGamesDrawn++;
                 }
                 else if (game.Result == "0-1" && game.Black == pseudo)
                 {
-                    gamesResult.numberOfGamesWon++;
+                    gamesResult.NumberOfGamesWon++;
                 }
                 else if (game.Result == "0-1" && game.White == pseudo)
                 {
-                    gamesResult.numberOfGamesLost++;
+                    gamesResult.NumberOfGamesLost++;
                 }
             }
             return gamesResult;

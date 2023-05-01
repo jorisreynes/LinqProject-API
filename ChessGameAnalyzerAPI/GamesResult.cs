@@ -2,8 +2,8 @@ namespace ChessGame_AnalyzerAPI;
 
 public class GamesResult
 {
-    public int numberOfGamesWon { get; set; }
-    public int numberOfGamesDrawn { get; set; }
-    public int numberOfGamesLost { get; set; }
+    public int NumberOfGamesWon { get; set; }
+    public int NumberOfGamesDrawn { get; set; }
+    public int NumberOfGamesLost { get; set; }
 
 }
