@@ -21,7 +21,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
         private const string FilePathJson = $@"../../ChessGameAnalyzer.UI/src/assets/data.json";
 
         [HttpGet]
-        public GamesResult GetGames(string opening = "All openings")
+        public GamesResult GetGames(string opening = "All openings", string? color= "All")
         {
             string firstMoves = "";
             switch (opening)
@@ -147,7 +147,29 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 .Select(grp => grp.Key).First();
 
             // We create a list with all the games that contains the opening using LINQ
-            List<ChessGame> filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
+            //List<ChessGame> filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
+
+            List<ChessGame> filteredGames = new List<ChessGame>();
+            
+            if (color == "White")
+            {
+                //we create a list with all the games that contains the opening and the color using LINQ
+                filteredGames = games.Where(g => g.Moves.Contains(firstMoves) && g.White == pseudo).ToList();
+            }
+            else if(color == "Black")
+            {
+                //we create a list with all the games that contains the opening and the color using LINQ
+                filteredGames = games.Where(g => g.Moves.Contains(firstMoves) && g.Black == pseudo).ToList();
+            }
+            else
+            {
+                //we create a list with all the games that contains the opening and the color using LINQ
+                filteredGames = games.Where(g => g.Moves.Contains(firstMoves)).ToList();
+            }
+            
+            
+            
+            
             
             // We save the games in a new XML file
             PrintXml(games);
@@ -216,11 +238,11 @@ namespace ChessGame_AnalyzerAPI.Controllers
         // Function to save the collection games in JSON
         private static void PrintJson(List<ChessGame> games)
         {
-            Console.WriteLine("Saving games in JSON...");
+            //Console.WriteLine("Saving games in JSON...");
             // delete the old file if it exists
             if (System.IO.File.Exists(FilePathJson))
             {
-                Console.WriteLine("Deleting old JSON file...");
+                //Console.WriteLine("Deleting old JSON file...");
                 System.IO.File.Delete(FilePathJson);
             }
             string json = JsonSerializer.Serialize(games);
