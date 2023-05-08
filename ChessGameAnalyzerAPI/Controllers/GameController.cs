@@ -21,14 +21,19 @@ namespace ChessGame_AnalyzerAPI.Controllers
         [HttpGet]
         public GamesResult GetGames(string? opening = "All openings", string? color= "All colors", string? endgame="All end of game")
         {
+            // We create a list avec all the games in the file from Chess.com
             List<ChessGame> games = CreateGamesList();
             
+            // We find the pseudo of the player
             string pseudo = FindPseudo(games);
             
+            // We find the first moves of the game with the opening asked from the front
             string firstMoves = FindFirstMoves(opening);
 
+            // We find the termination from the file with the endgame asked from the front
             string endgameExtractFromFile = FindEndgame(endgame);
 
+            // We filter the games with the pseudo and the parameters from the front
             List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, games);
             
             // We save the games in a new XML file
@@ -37,6 +42,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             // We save the games in a new JSON file
             PrintJson(games);
 
+            // We return the result to the front
             return ScoreGames(filteredGames, pseudo);
         }
         
@@ -246,7 +252,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
             return gamesResult;
         }
         
-        // Save the collection games in XML
         private static void PrintXml(IEnumerable<ChessGame> games)
         {
             XElement xml = new XElement("ChessGame",
@@ -270,7 +275,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
             System.IO.File.WriteAllText(FilePathXml, xml.ToString());
         }
         
-        // Function to save the collection games in JSON
         private static void PrintJson(List<ChessGame> games)
         {
             // delete the old file if it exists
