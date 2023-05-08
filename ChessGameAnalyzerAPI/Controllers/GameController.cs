@@ -13,8 +13,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
     [ApiController]
     public class GameController : Controller
     {
-        //private string pseudo { get; set; }
-        
         // Files paths 
         private const string FilePathTxt = $@"../../DataSource/Text/data.txt";
         private const string FilePathXml = $@"../../ChessGameAnalyzer.UI/src/assets/data.xml";
@@ -23,94 +21,25 @@ namespace ChessGame_AnalyzerAPI.Controllers
         [HttpGet]
         public GamesResult GetGames(string? opening = "All openings", string? color= "All colors", string? endgame="All end of game")
         {
-            string firstMoves = FindFirstMoves(opening);
-            
-            switch (endgame)
-            {
-                case "Checkmate":
-                    endgame = "échec et mat";
-                    break;
-                case "Draw":
-                    endgame = "nulle";
-                    break;
-                case "Resignation":
-                    endgame = "abandon";
-                    break;
-                case "Time":
-                    endgame = "temps";
-                    break;
-                case "All end of game":
-                    endgame = "";
-                    break;
-            }
-
-
             List<ChessGame> games = CreateGamesList();
             
-
-
             string pseudo = FindPseudo(games);
             
-            
-            
+            string firstMoves = FindFirstMoves(opening);
 
-            // We create a list with all the games that contains the opening using LINQ
-            List<ChessGame> filteredGames = new List<ChessGame>();
-            
-            if (color == "White")
-            {
-                //we create a list with all the games that contains the opening, the color, and the endgame using LINQ
-                filteredGames = games.Where(g => g.Moves.Contains(firstMoves) && g.White == pseudo && g.Termination.Contains(endgame)).ToList();
-            }
-            else if(color == "Black")
-            {
-                //we create a list with all the games that contains the opening, the color, and the endgame using LINQ
-                filteredGames = games.Where(g => g.Moves.Contains(firstMoves) && g.Black == pseudo && g.Termination.Contains(endgame)).ToList();
-            }
-            else
-            {
-                //we create a list with all the games that contains the opening, the color, and the endgame using LINQ
-                filteredGames = games.Where(g => g.Moves.Contains(firstMoves) && g.Termination.Contains(endgame)).ToList();
-            }
-            
+            string endgameExtractFromFile = FindEndgame(endgame);
+
+            List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, games);
             
             // We save the games in a new XML file
             PrintXml(games);
             
             // We save the games in a new JSON file
             PrintJson(games);
-            
-            // We create a new GamesResult
-            GamesResult gamesResult = new GamesResult();
-            
-            // We score the games
-            foreach (ChessGame game in filteredGames)
-            {
-                if (game.Result == "1-0" && game.White == pseudo)
-                {
-                    gamesResult.NumberOfGamesWon++;
-                }
-                else if (game.Result == "1-0" && game.Black == pseudo)
-                {
-                    gamesResult.NumberOfGamesLost++;
-                }
-                else if (game.Result == "1/2-1/2")
-                {
-                    gamesResult.NumberOfGamesDrawn++;
-                }
-                else if (game.Result == "0-1" && game.Black == pseudo)
-                {
-                    gamesResult.NumberOfGamesWon++;
-                }
-                else if (game.Result == "0-1" && game.White == pseudo)
-                {
-                    gamesResult.NumberOfGamesLost++;
-                }
-            }
-            return gamesResult;
+
+            return ScoreGames(filteredGames, pseudo);
         }
-
-
+        
         private static List<ChessGame> CreateGamesList()
         {
             // We create a list avec all the games in the file from Chess.com
@@ -183,7 +112,6 @@ namespace ChessGame_AnalyzerAPI.Controllers
                     }
                 }
             }
-
             return games;
         }
 
@@ -245,6 +173,77 @@ namespace ChessGame_AnalyzerAPI.Controllers
             string pseudo = pseudoList.GroupBy(i => i).OrderByDescending(grp => grp.Count())
                 .Select(grp => grp.Key).First();
             return pseudo;
+        }
+
+        private static string FindEndgame(string endgame)
+        {
+            string endgameExtractFromFile = string.Empty;
+            switch (endgame)
+            {
+                case "Checkmate":
+                    endgameExtractFromFile = "échec et mat";
+                    break;
+                case "Draw":
+                    endgameExtractFromFile = "nulle";
+                    break;
+                case "Resignation":
+                    endgameExtractFromFile = "abandon";
+                    break;
+                case "Time":
+                    endgameExtractFromFile = "temps";
+                    break;
+                case "All end of game":
+                    endgameExtractFromFile = "";
+                    break;
+            }
+            return endgameExtractFromFile;
+        }
+
+        private static List<ChessGame> CreateFilteredGames( string pseudo, string opening, string endgame, List<ChessGame> games)
+        {
+            // We create a list of games with the filters
+            List<ChessGame> filteredGames = new List<ChessGame>();
+            foreach (ChessGame game in games)
+            {
+                if (game.White == pseudo || game.Black == pseudo)
+                {
+                    if (game.Moves.StartsWith(FindFirstMoves(opening)) && game.Termination.Contains(FindEndgame(endgame)))
+                    {
+                        filteredGames.Add(game);
+                    }
+                }
+            }
+            return filteredGames;
+        }
+        
+        private static GamesResult ScoreGames(List<ChessGame> filteredGames, string pseudo)
+        {
+            GamesResult gamesResult = new GamesResult();
+            // We score the games
+            foreach (ChessGame game in filteredGames)
+            {
+                if (game.Result == "1-0" && game.White == pseudo)
+                {
+                    gamesResult.NumberOfGamesWon++;
+                }
+                else if (game.Result == "1-0" && game.Black == pseudo)
+                {
+                    gamesResult.NumberOfGamesLost++;
+                }
+                else if (game.Result == "1/2-1/2")
+                {
+                    gamesResult.NumberOfGamesDrawn++;
+                }
+                else if (game.Result == "0-1" && game.Black == pseudo)
+                {
+                    gamesResult.NumberOfGamesWon++;
+                }
+                else if (game.Result == "0-1" && game.White == pseudo)
+                {
+                    gamesResult.NumberOfGamesLost++;
+                }
+            }
+            return gamesResult;
         }
         
         // Save the collection games in XML
