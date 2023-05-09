@@ -34,7 +34,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             string endgameExtractFromFile = FindEndgame(endgame);
 
             // We filter the games with the pseudo and the parameters from the front
-            List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, games);
+            List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, color, games);
             
             // We save the games in a new XML file
             PrintXml(games);
@@ -204,8 +204,8 @@ namespace ChessGame_AnalyzerAPI.Controllers
             }
             return endgameExtractFromFile;
         }
-
-        private static List<ChessGame> CreateFilteredGames( string pseudo, string opening, string endgame, List<ChessGame> games)
+        
+        private static List<ChessGame> CreateFilteredGames(string pseudo, string opening, string endgame, string color, List<ChessGame> games)
         {
             // We create a list of games with the filters
             List<ChessGame> filteredGames = new List<ChessGame>();
@@ -215,7 +215,18 @@ namespace ChessGame_AnalyzerAPI.Controllers
                 {
                     if (game.Moves.StartsWith(FindFirstMoves(opening)) && game.Termination.Contains(FindEndgame(endgame)))
                     {
-                        filteredGames.Add(game);
+                        if (color == "All colors")
+                        {
+                            filteredGames.Add(game);
+                        }
+                        else if (color == "White" && game.White == pseudo)
+                        {
+                            filteredGames.Add(game);
+                        }
+                        else if (color == "Black" && game.Black == pseudo)
+                        {
+                            filteredGames.Add(game);
+                        }
                     }
                 }
             }
