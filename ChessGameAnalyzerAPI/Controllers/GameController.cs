@@ -19,7 +19,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
         private const string FilePathJson = $@"../../ChessGameAnalyzer.UI/src/assets/data.json";
 
         [HttpGet]
-        public GamesResult GetGames(string? opening = "All openings", string? color= "All colors", string? endgame="All end of game")
+        public GamesResult GetGames(string? opening = "All openings", string? color= "All colors", string? endgame="All end of game", string? time="0") 
         {
             // We create a list avec all the games in the file from Chess.com
             List<ChessGame> games = CreateGamesList();
@@ -34,7 +34,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             string endgameExtractFromFile = FindEndgame(endgame);
 
             // We filter the games with the pseudo and the parameters from the front
-            List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, color, games);
+            List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, color, games, time);
             
             // We save the games in a new XML file
             PrintXml(games);
@@ -205,15 +205,18 @@ namespace ChessGame_AnalyzerAPI.Controllers
             return endgameExtractFromFile;
         }
         
-        private static List<ChessGame> CreateFilteredGames(string pseudo, string opening, string endgame, string color, List<ChessGame> games)
+        private static List<ChessGame> CreateFilteredGames(string pseudo, string opening, string endgame, string color, List<ChessGame> games, string time)
         {
+            // the + disapears in the url
+            time = time.Replace(" ", "+");
+
             // We create a list of games with the filters
             List<ChessGame> filteredGames = new List<ChessGame>();
             foreach (ChessGame game in games)
             {
                 if (game.White == pseudo || game.Black == pseudo)
                 {
-                    if (game.Moves.StartsWith(FindFirstMoves(opening)) && game.Termination.Contains(FindEndgame(endgame)))
+                    if (game.Moves.StartsWith(FindFirstMoves(opening)) && game.Termination.Contains(FindEndgame(endgame)) && game.TimeControl.Contains(time))
                     {
                         if (color == "All colors")
                         {
