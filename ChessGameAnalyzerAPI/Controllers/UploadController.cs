@@ -10,30 +10,29 @@ namespace ChessGame_AnalyzerAPI.Controllers;
 
 public class UploadController : Controller
 {
+    string folderPath = "../../DataSource/Text";
+    
     // function to save a file uploaded by the front in angular
     [HttpPost]
     [Route("api/upload")]
-    public void UploadFile(IFormFile file)
+    public async Task UploadFile(IFormFile file)
     {
-        // delete the file if it already exists
-        if (System.IO.File.Exists(Path.Combine(
-            Directory.GetCurrentDirectory(), "../../DataSource/Text",
-            file.FileName)))
-        {
-            System.IO.File.Delete(Path.Combine(
-                Directory.GetCurrentDirectory(), "../../DataSource/Text",
-                file.FileName));
-        }
-        
-        string path = Path.Combine(
-            Directory.GetCurrentDirectory(), "../../DataSource/Text",
-            file.FileName);
+        string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderPath, file.FileName);
 
-        using (FileStream stream = new FileStream(path, FileMode.Create))
+        // If the file already exists, we delete it
+        if (System.IO.File.Exists(filePath))
         {
-            file.CopyToAsync(stream);
+            System.IO.File.Delete(filePath);
         }
 
-            
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }  
     }
 }

@@ -21,6 +21,14 @@ namespace ChessGame_AnalyzerAPI.Controllers
         [HttpGet]
         public GamesResult GetGames(string? opening = "All openings", string? color= "All colors", string? endgame="All end of game")
         {
+            var emptyResult = new GamesResult();
+
+            // Vérifier si le répertoire existe, sinon le créer
+            if (!System.IO.File.Exists(FilePathTxt))
+            {
+                //System.IO.File.Create(FilePathTxt);
+                return emptyResult;
+            }
             // We create a list avec all the games in the file from Chess.com
             List<ChessGame> games = CreateGamesList();
             
@@ -50,6 +58,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
         {
             // We create a list avec all the games in the file from Chess.com
             List<ChessGame> games = new List<ChessGame>();
+
             using (StreamReader reader = new StreamReader(FilePathTxt))
             {
                 string line;
