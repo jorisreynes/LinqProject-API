@@ -262,7 +262,7 @@ namespace ChessGame_AnalyzerAPI.Controllers
             }
             return gamesResult;
         }
-        
+
         private static void PrintXml(IEnumerable<ChessGame> games)
         {
             XElement xml = new XElement("ChessGame",
@@ -283,9 +283,20 @@ namespace ChessGame_AnalyzerAPI.Controllers
                     new XElement("Moves", game.Moves)
                     )
                 );
+
+            // Récupérer le répertoire du fichier
+            var directory = Path.GetDirectoryName(FilePathXml);
+
+            // Vérifier si le répertoire existe, sinon le créer
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            // Écrire le contenu XML dans le fichier
             System.IO.File.WriteAllText(FilePathXml, xml.ToString());
         }
-        
+
         private static void PrintJson(List<ChessGame> games)
         {
             // delete the old file if it exists
