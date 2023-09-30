@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.AspNetCore.Mvc;
 
 
 namespace ChessGame_AnalyzerAPI.Controllers;
@@ -20,7 +16,7 @@ public class GameController : Controller
     private const string FilePathJson = $@"../../ChessGameAnalyzer.UI/src/assets/data.json";
 
     [HttpGet]
-    public GamesResult GetGames(string? opening = "All openings", string? color= "All colors", string? endgame="All end of game")
+    public GamesResult GetGames(string? opening = "All openings", string? color = "All colors", string? endgame = "All end of game")
     {
         var emptyResult = new GamesResult();
 
@@ -32,10 +28,10 @@ public class GameController : Controller
         }
         // We create a list avec all the games in the file from Chess.com
         List<ChessGame> games = CreateGamesList();
-        
+
         // We find the pseudo of the player
         string pseudo = FindPseudo(games);
-        
+
         // We find the first moves of the game with the opening asked from the front
         string firstMoves = FindFirstMoves(opening);
 
@@ -44,10 +40,10 @@ public class GameController : Controller
 
         // We filter the games with the pseudo and the parameters from the front
         List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, color, games);
-        
+
         // We save the games in a new XML file
         PrintXml(games);
-        
+
         // We save the games in a new JSON file
         PrintJson(games);
 
@@ -201,7 +197,7 @@ public class GameController : Controller
             case "Slav":
                 firstMoves = "1. d4 d5 2. c4 c6";
                 break;
-            case"Petrov":
+            case "Petrov":
                 firstMoves = "1. e4 e5 2. Nf3 Nc6";
                 break;
             case "Scandinavian":
@@ -258,7 +254,7 @@ public class GameController : Controller
         }
         return endgameExtractFromFile;
     }
-    
+
     private static List<ChessGame> CreateFilteredGames(string pseudo, string opening, string endgame, string color, List<ChessGame> games)
     {
         // We create a list of games with the filters
@@ -286,7 +282,7 @@ public class GameController : Controller
         }
         return filteredGames;
     }
-    
+
     private static GamesResult ScoreGames(List<ChessGame> filteredGames, string pseudo)
     {
         GamesResult gamesResult = new GamesResult();
