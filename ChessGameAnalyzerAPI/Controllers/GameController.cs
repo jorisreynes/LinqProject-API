@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 
 namespace ChessGame_AnalyzerAPI.Controllers;
@@ -12,8 +10,8 @@ public class GameController : Controller
 {
     // Files paths 
     private const string FilePathTxt = $@"../../DataSource/Text/data.txt";
-    private const string FilePathXml = $@"../../ChessGameAnalyzer.UI/src/assets/data.xml";
-    private const string FilePathJson = $@"../../ChessGameAnalyzer.UI/src/assets/data.json";
+    //private const string FilePathXml = $@"../../ChessGameAnalyzer.UI/src/assets/data.xml";
+    //private const string FilePathJson = $@"../../ChessGameAnalyzer.UI/src/assets/data.json";
 
     [HttpGet]
     public GamesResult GetGames(string? opening = "All openings", string? color = "All colors", string? endgame = "All end of game")
@@ -40,12 +38,6 @@ public class GameController : Controller
 
         // We filter the games with the pseudo and the parameters from the front
         List<ChessGame> filteredGames = CreateFilteredGames(pseudo, opening, endgame, color, games);
-
-        // We save the games in a new XML file
-        PrintXml(games);
-
-        // We save the games in a new JSON file
-        PrintJson(games);
 
         // We return the result to the front
         return ScoreGames(filteredGames, pseudo);
@@ -311,50 +303,5 @@ public class GameController : Controller
             }
         }
         return gamesResult;
-    }
-
-    private static void PrintXml(IEnumerable<ChessGame> games)
-    {
-        XElement xml = new XElement("ChessGame",
-            from game in games
-            select new XElement("Game",
-                new XElement("Event", game.Event),
-                new XElement("Site", game.Site),
-                new XElement("Date", game.Date),
-                new XElement("Round", game.Round),
-                new XElement("White", game.White),
-                new XElement("Black", game.Black),
-                new XElement("Result", game.Result),
-                new XElement("WhiteElo", game.WhiteElo),
-                new XElement("BlackElo", game.BlackElo),
-                new XElement("TimeControl", game.TimeControl),
-                new XElement("EndTime", game.EndTime),
-                new XElement("Termination", game.Termination),
-                new XElement("Moves", game.Moves)
-                )
-            );
-
-        // Récupérer le répertoire du fichier
-        var directory = Path.GetDirectoryName(FilePathXml);
-
-        // Vérifier si le répertoire existe, sinon le créer
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        // Écrire le contenu XML dans le fichier
-        System.IO.File.WriteAllText(FilePathXml, xml.ToString());
-    }
-
-    private static void PrintJson(List<ChessGame> games)
-    {
-        // delete the old file if it exists
-        if (System.IO.File.Exists(FilePathJson))
-        {
-            System.IO.File.Delete(FilePathJson);
-        }
-        string json = JsonSerializer.Serialize(games);
-        System.IO.File.WriteAllText(FilePathJson, json);
     }
 }
