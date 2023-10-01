@@ -1,4 +1,4 @@
-namespace ChessGame_AnalyzerAPI;
+namespace ChessGame_AnalyzerAPI.Models;
 
 public class GamesResult
 {

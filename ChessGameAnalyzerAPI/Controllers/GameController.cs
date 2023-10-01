@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ChessGame_AnalyzerAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
 
@@ -163,6 +164,7 @@ public class GameController : Controller
         return result;
     }
 
+    // The function receive the name of the opening selected in the front, we search for the first moves to filter the games
     private static string FindFirstMoves(string opening)
     {
         string firstMoves = "";
