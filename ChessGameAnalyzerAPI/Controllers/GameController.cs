@@ -10,9 +10,7 @@ namespace ChessGame_AnalyzerAPI.Controllers;
 public class GameController : Controller
 {
     // Files paths 
-    private const string FilePathTxt = $@"../../DataSource/Text/data.txt";
-    //private const string FilePathXml = $@"../../ChessGameAnalyzer.UI/src/assets/data.xml";
-    //private const string FilePathJson = $@"../../ChessGameAnalyzer.UI/src/assets/data.json";
+    private const string FilePathTxt = $@"res/data.txt";
 
     [HttpGet]
     public GamesResult GetGames(string? opening = "All openings", string? color = "All colors", string? endgame = "All end of game")

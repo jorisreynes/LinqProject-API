@@ -4,7 +4,7 @@ namespace ChessGame_AnalyzerAPI.Controllers;
 
 public class UploadController : Controller
 {
-    string folderPath = "../../DataSource/Text";
+    string folderPath = "res";
 
     // function to save a file uploaded by the front in angular
     [HttpPost]
