@@ -17,6 +17,4 @@ Launch the project
 
 You will have access to the Swagger interface
 
-(the database is a MongoDB Atlas cluster and can be paused due to inactivity)
-
 ![LinqProject-API](APIScreenshot.jpg)
