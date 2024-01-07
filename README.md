@@ -15,4 +15,4 @@ Launch the project
 
 You will have access to the Swagger interface
 
-![LinqProject-API](Screenshot.jpg)
+![LinqProject-API](APIScreenshot.jpg)
