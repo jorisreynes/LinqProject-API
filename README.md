@@ -6,14 +6,16 @@ The application is built with a C# .NET 6.0 backend API, and you can download th
 
 You need to download your data from Chess.com and upload it with the Angular frontend, or with Postman
 
-How to install it :
+## How to install it :
 
+````
 git clone https://github.com/jorisreynes/LinqProject-API.git 
 cd LinqProject-API
+````
 
-Open the solution with Visual Studio (or another IDE if you prefer)
+- Open the solution with Visual Studio (or another IDE if you prefer)
 
-Launch the project
+- Launch the project
 
 You will have access to the Swagger interface
 
