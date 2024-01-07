@@ -1,3 +1,5 @@
+# LinqProject-API
+
 LinqProject-API as a web application designed to visualize your chess game stats
 
 The application is built with a C# .NET 6.0 backend API, and you can download the Angular interface from the LinqProject-Angular repository : https://github.com/jorisreynes/LinqProject-Angular
