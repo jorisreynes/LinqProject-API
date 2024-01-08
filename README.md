@@ -12,7 +12,7 @@ You need to download the .pgn file from Chess.com, you can upload it with the An
 
 Once the file is sent on the backend, you can see your winrate and you can filter the games with the Opening, the color, and the End of game
 
-For example you can see your winrate for the Scottish opening, or compare your winrate with white or black, or see your winrate because of checkmate or time (interesting if you play blitz)
+For example you can see your winrate with the Scotch opening, or compare your winrate with white or black, or see your winrate because of checkmate or time (interesting if you play blitz)
 
 ## Other
 
