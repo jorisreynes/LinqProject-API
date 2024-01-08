@@ -20,6 +20,10 @@ I also created the same API in Java to compare, you can find the repo here : htt
 
 And I created the same project with the MERN stack to compare, you can find the repo here : https://github.com/jorisreynes/mern
 
+This project is not finished because finally there is a Chess.com API with more data than what we have in the .pgn file, so the backend is not needed anymore, 
+
+There is a new version, frontend only, of this project here : https://github.com/jorisreynes/ChessGameStats
+
 ## How to install it :
 
 ````
