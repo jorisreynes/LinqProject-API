@@ -34,7 +34,10 @@ cd LinqProject-API
 
 - Launch the project
 
-You will have access to the Swagger interface
+You will have access to the Swagger interface :
+
+![LinqProject-API](APIScreenshot.jpg)
+
+The front :
 
 ![LinqProject-API](AngularScreenshot.jpg)
-![LinqProject-API](APIScreenshot.jpg)
