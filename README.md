@@ -36,4 +36,5 @@ cd LinqProject-API
 
 You will have access to the Swagger interface
 
+![LinqProject-API](AngularScreenshot.jpg)
 ![LinqProject-API](APIScreenshot.jpg)
